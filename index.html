@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Portfolio - 3D Car</title>
+  <style>
+    body { margin: 0; overflow: hidden; font-family: sans-serif; }
+    #ui {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: white;
+      z-index: 10;
+    }
+    canvas { display: block; }
+  </style>
+</head>
+
+<body>
+
+<div id="ui">
+  <h2>Ayan Portfolio 🚀</h2>
+  <p>3D Car Demo</p>
+</div>
+
+<script type="module">
+import * as THREE from "https://cdn.skypack.dev/three";
+import { GLTFLoader } from "https://cdn.skypack.dev/three/examples/jsm/loaders/GLTFLoader.js";
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// Light
+const light = new THREE.AmbientLight(0xffffff, 1);
+scene.add(light);
+
+let car;
+
+// Load car
+const loader = new GLTFLoader();
+loader.load("car.glb", (gltf) => {
+  car = gltf.scene;
+  scene.add(car);
+  car.position.set(0, 0, 0);
+});
+
+// Camera position
+camera.position.set(0, 2, 6);
+
+// Mouse control feel (simple auto animation)
+function animate() {
+  requestAnimationFrame(animate);
+
+  if (car) {
+    car.rotation.y += 0.01;
+  }
+
+  renderer.render(scene, camera);
+}
+
+animate();
+
+// resize fix
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+</body>
+</html>
